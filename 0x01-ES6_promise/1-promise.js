@@ -3,7 +3,7 @@ function getFullResponseFromAPI(success) {
     if (success === true) {
       const response = {
         status: 200,
-        data: 'Success',
+        body: 'Success',
       };
       resolve(response);
     } else {
