@@ -7,6 +7,7 @@ export default class extends Car {
   }
 
   cloneCar() {
-    return super.cloneCar();
+    const clone = super.cloneCar();
+    return new Car(clone._brand, clone._motor, clone._color);
   }
 }
