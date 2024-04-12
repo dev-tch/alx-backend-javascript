@@ -6,7 +6,6 @@ export default class Car {
   }
 
   cloneCar() {
-    const clone = this.constructor[Symbol.species];
-    return clone;
+    return new Car(this._brand, this._motor, this._color);
   }
 }
