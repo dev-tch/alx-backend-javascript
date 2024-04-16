@@ -12,8 +12,5 @@ export default function cleanSet(setObj, startString) {
       }
     }
   }
-  if (parts.length > 1) {
-    return parts.join('-');
-  }
-  return '';
+  return parts.join('-');
 }
