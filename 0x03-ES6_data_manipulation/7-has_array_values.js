@@ -1,4 +1,4 @@
 export default function hasValuesFromArray(setA, arrayObj) {
-  const setB = new Set(arrayObj);
-  return setB.isSubsetOf(setA);
+  const myFunction = (value) => setA.has(value);
+  return arrayObj.every(myFunction);
 }
