@@ -5,9 +5,9 @@ export default function cleanSet(setObj, startString) {
   const index = startString.length;
   const parts = [];
   for (const item of setObj.values()) {
-    if (typeof value === 'string' && item.startsWith(startString)) {
+    if (item.startsWith(startString)) {
       const endString = item.substring(index);
-      if (endString) {
+      if (endString && endString !== startString) {
         parts.push(endString);
       }
     }
