@@ -7,7 +7,7 @@ export default function cleanSet(setObj, startString) {
   for (const item of setObj.values()) {
     if (item.startsWith(startString)) {
       const endString = item.substring(index);
-      if (endString && endString !== startString) {
+      if (endString) {
         parts.push(endString);
       }
     }
