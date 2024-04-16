@@ -1,5 +1,5 @@
 export default function cleanSet(setObj, startString) {
-  if (!startString || !setObj || !(setObj instanceof Set) || typeof startString !== 'string') {
+  if (!setObj && !startString && !(setObj instanceof Set) && typeof startString !== 'string') {
     return '';
   }
   const index = startString.length;
