@@ -20,6 +20,7 @@ const app = createServer((req, res) => {
         receivedData += data.toString();
       });
       child.stderr.on('data', (data) => {
+        res.statusCode = 500;
         receivedData += data.toString();
       });
       child.on('close', () => {
