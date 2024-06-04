@@ -43,11 +43,17 @@ class Department {
     }
     return false;
   }
+
+  static iniTotal() {
+    if (this.total === undefined) {
+      this.total = 0;
+    } else {
+      this.total = 0;
+    }
+  }
 }
 
-const listDep = [];
-
-function search(nameDep) {
+function search(nameDep, listDep) {
   for (const obj of listDep) {
     if (obj.isNameDepEquals(nameDep)) {
       return obj;
@@ -59,6 +65,8 @@ function search(nameDep) {
 }
 const countStudents = (path) => new Promise((resolve, reject) => {
   const output = [];
+  const listDep = [];
+  Department.iniTotal();
   fs.readFile(path, 'utf8', (err, data) => {
     if (err) {
       reject(new Error('Cannot load the database'));
@@ -67,7 +75,7 @@ const countStudents = (path) => new Promise((resolve, reject) => {
       for (const line of lines) {
         if (!(line.trim() === '' || line.includes('firstname,lastname,age,field'))) {
           const infoStd = line.split(',');
-          const objDep = search(infoStd[3]);
+          const objDep = search(infoStd[3], listDep);
           objDep.append(infoStd[0]);
         }
       }
@@ -98,7 +106,7 @@ const app = createServer((req, res) => {
       })
       .catch(() => {
         const msg = 'This is the list of our students\nCannot load the database';
-        res.statusCode = 200;
+        res.statusCode = 404;
         res.end(msg);
       });
   }
