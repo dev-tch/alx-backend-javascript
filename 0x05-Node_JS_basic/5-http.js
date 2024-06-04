@@ -92,7 +92,8 @@ const app = createServer((req, res) => {
   res.setHeader('Content-Type', 'text/plain');
   if (req.ur === '/') {
     res.end('Hello Holberton School!');
-  } else {
+  }
+  if (req.url === '/students') {
     countStudents(path)
       .then((output) => {
         output.splice(0, 0, 'This is the list of our students');
@@ -100,7 +101,7 @@ const app = createServer((req, res) => {
       })
       .catch(() => {
         const msg = 'This is the list of our students\nCannot load the database';
-        res.statusCode = 500;
+        res.statusCode = 404;
         res.end(msg);
       });
   }
