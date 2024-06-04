@@ -90,24 +90,18 @@ const port = 1245;
 const app = createServer((req, res) => {
   res.statusCode = 200;
   res.setHeader('Content-Type', 'text/plain');
-  switch (req.url) {
-    case '/':
-      res.end('Hello Holberton School!');
-      break;
-    case '/students':
-      countStudents(path)
-        .then((output) => {
-          output.splice(0, 0, 'This is the list of our students');
-          res.end(output.join('\n'));
-        })
-        .catch(() => {
-          res.statusCode = 404;
-          res.end('Cannot load the database');
-        });
-      break;
-    default:
-      res.statusCode = 404;
-      res.end('Cannot load the database');
+  if (req.ur === '/') {
+    res.end('Hello Holberton School!');
+  } else {
+    countStudents(path)
+      .then((output) => {
+        output.splice(0, 0, 'This is the list of our students');
+        res.end(output.join('\n'));
+      })
+      .catch(() => {
+        const msg = 'This is the list of our students\nCannot load the database';
+        res.end(msg);
+      });
   }
 });
 app.listen(port, hostname, () => {
