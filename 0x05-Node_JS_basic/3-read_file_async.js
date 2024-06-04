@@ -1,4 +1,4 @@
-const fsPromises = require('fs/promises');
+const fs = require('fs');
 
 class Department {
   constructor(nameDep) {
@@ -58,7 +58,7 @@ function search(nameDep) {
 }
 
 function countStudents(path) {
-  return fsPromises.readFile(path, { encoding: 'utf8' })
+  return fs.promises.readFile(path, { encoding: 'utf8' })
     .then((data) => {
       const lines = data.split('\n');
       for (const line of lines) {
