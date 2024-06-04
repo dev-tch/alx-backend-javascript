@@ -46,7 +46,7 @@ class Department {
 }
 
 const listDep = [];
-const output = [];
+
 function search(nameDep) {
   for (const obj of listDep) {
     if (obj.isNameDepEquals(nameDep)) {
@@ -58,6 +58,7 @@ function search(nameDep) {
   return obj;
 }
 const countStudents = (path) => new Promise((resolve, reject) => {
+  const output = [];
   fs.readFile(path, 'utf8', (err, data) => {
     if (err) {
       reject(new Error('Cannot load the database'));
