@@ -61,8 +61,7 @@ const countStudents = (path) => new Promise((resolve, reject) => {
   fs.readFile(path, 'utf8', (err, data) => {
     if (err) {
       reject(new Error('Cannot load the database'));
-    }
-    if (data) {
+    } else {
       const lines = data.split('\n');
       for (const line of lines) {
         if (!(line.trim() === '' || line.includes('firstname,lastname,age,field'))) {
@@ -98,7 +97,6 @@ const app = createServer((req, res) => {
       })
       .catch(() => {
         const msg = 'This is the list of our students\nCannot load the database';
-        // const msg = 'Cannot load the database';
         res.statusCode = 404;
         res.end(msg);
       });
