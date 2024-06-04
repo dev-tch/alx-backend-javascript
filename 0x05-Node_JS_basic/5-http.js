@@ -1,7 +1,5 @@
 const { createServer } = require('http');
-const { spawn } = require('child_process');
 const fs = require('fs');
-const { stdout } = require('process');
 
 class Department {
   constructor(nameDep) {
@@ -48,7 +46,7 @@ class Department {
 }
 
 const listDep = [];
-const output  = []
+const output = [];
 function search(nameDep) {
   for (const obj of listDep) {
     if (obj.isNameDepEquals(nameDep)) {
@@ -60,27 +58,31 @@ function search(nameDep) {
   return obj;
 }
 const path = (process.argv.length === 3) ? process.argv[2] : '';
-const countStudents = (path) => new Promise((resolve, reject) => { 
-
+const countStudents = (path) => new Promise((resolve, reject) => {
+  if (!path) {
+    reject(new Error('Cannot load the database'));
+  }
   fs.readFile(path, 'utf8', (err, data) => {
-    if (!path || err) {
-      Promise.reject(new Error('Cannot load the database'));
+    if (err) {
+      reject(new Error('Cannot load the database'));
     }
-    const lines = data.split('\n');
-    for (const line of lines) {
-      if (!(line.trim() === '' || line.includes('firstname,lastname,age,field'))) {
-        const infoStd = line.split(',');
-        const objDep = search(infoStd[3]);
-        objDep.append(infoStd[0]);
+    if (data) {
+      const lines = data.split('\n');
+      for (const line of lines) {
+        if (!(line.trim() === '' || line.includes('firstname,lastname,age,field'))) {
+          const infoStd = line.split(',');
+          const objDep = search(infoStd[3]);
+          objDep.append(infoStd[0]);
+        }
       }
-    }
-    output.push(`Number of students: ${Department.getTotal()}`);
-    for (const depObj of listDep) {
-      const students = depObj.getStudents();
-      output.push(`Number of students in ${depObj.getNameDep()}: ${students.length}. List: ${Array.prototype.join.call(students, ', ')}`);
+      output.push(`Number of students: ${Department.getTotal()}`);
+      for (const depObj of listDep) {
+        const students = depObj.getStudents();
+        output.push(`Number of students in ${depObj.getNameDep()}: ${students.length}. List: ${Array.prototype.join.call(students, ', ')}`);
+      }
+      resolve(output);
     }
   });
-
 });
 
 const hostname = 'localhost';
@@ -95,15 +97,17 @@ const app = createServer((req, res) => {
     case '/students':
       countStudents(path)
         .then((output) => {
-          output.splice(0, 0 , 'This is the list of our students')
-          res.end(output.join('\n'))
+          output.splice(0, 0, 'This is the list of our students');
+          res.end(output.join('\n'));
         })
-        .catch( () => {
-          response.statusCode = 404;
-          response.end('Cannot load the database');
-        }
-        );  
+        .catch(() => {
+          res.statusCode = 404;
+          res.end('Cannot load the database');
+        });
       break;
+    default:
+      res.statusCode = 404;
+      res.end('Cannot load the database');
   }
 });
 app.listen(port, hostname, () => {
