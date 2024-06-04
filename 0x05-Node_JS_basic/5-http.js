@@ -57,7 +57,6 @@ function search(nameDep) {
   listDep.push(obj);
   return obj;
 }
-const path = (process.argv.length === 3) ? process.argv[2] : '';
 const countStudents = (path) => new Promise((resolve, reject) => {
   if (!path) {
     reject(new Error('Cannot load the database'));
@@ -94,7 +93,7 @@ const app = createServer((req, res) => {
     res.end('Hello Holberton School!');
   }
   if (req.url === '/students') {
-    countStudents(path)
+    countStudents(process.argv[2].toString())
       .then((output) => {
         output.splice(0, 0, 'This is the list of our students');
         res.end(output.join('\n'));
@@ -102,7 +101,7 @@ const app = createServer((req, res) => {
       .catch(() => {
         const msg = 'This is the list of our students\nCannot load the database';
         // const msg = 'Cannot load the database';
-        res.statusCode = 200;
+        res.statusCode = 404;
         res.end(msg);
       });
   }
