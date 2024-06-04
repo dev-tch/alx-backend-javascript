@@ -7,7 +7,7 @@ const app = createServer((req, res) => {
   res.statusCode = 200;
   res.setHeader('Content-Type', 'text/plain');
   const path = (process.argv.length === 3) ? process.argv[2] : '';
-  const cmd = `(async () => {const countStudents = require('./3-read_file_async'); await countStudents('${path}');})()`;
+  const cmd = `(async () => {const countStudents = require('./3-read_file_async'); try { await countStudents('${path}');} catch(error) {console.log(error)}})()`;
   let child = '';
   let receivedData = '';
   switch (req.url) {
