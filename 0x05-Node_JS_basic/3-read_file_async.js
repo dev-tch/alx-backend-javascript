@@ -57,24 +57,25 @@ function search(nameDep) {
   return obj;
 }
 
-async function countStudents(path) {
-  try {
-    const data = await fsPromises.readFile(path, { encoding: 'utf8' });
-    const lines = data.split('\n');
-    for (const line of lines) {
-      if (!(line.trim() === '' || line.includes('firstname,lastname,age,field'))) {
-        const infoStd = line.split(',');
-        const objDep = search(infoStd[3]);
-        objDep.append(infoStd[0]);
+function countStudents(path) {
+  return fsPromises.readFile(path, { encoding: 'utf8' })
+    .then((data) => {
+      const lines = data.split('\n');
+      for (const line of lines) {
+        if (!(line.trim() === '' || line.includes('firstname,lastname,age,field'))) {
+          const infoStd = line.split(',');
+          const objDep = search(infoStd[3]);
+          objDep.append(infoStd[0]);
+        }
       }
-    }
-    console.log(`Number of students: ${Department.getTotal()}`);
-    for (const depObj of listDep) {
-      const students = depObj.getStudents();
-      console.log(`Number of students in ${depObj.getNameDep()}: ${students.length}. List: ${Array.prototype.join.call(students, ', ')}`);
-    }
-  } catch (err) {
-    throw new Error('Cannot load the database');
-  }
+      console.log(`Number of students: ${Department.getTotal()}`);
+      for (const depObj of listDep) {
+        const students = depObj.getStudents();
+        console.log(`Number of students in ${depObj.getNameDep()}: ${students.length}. List: ${Array.prototype.join.call(students, ', ')}`);
+      }
+    })
+    .catch(() => {
+      throw new Error('Cannot load the database');
+    });
 }
 module.exports = countStudents;
