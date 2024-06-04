@@ -98,7 +98,7 @@ const app = createServer((req, res) => {
       })
       .catch(() => {
         const msg = 'This is the list of our students\nCannot load the database';
-        res.statusCode = 404;
+        res.statusCode = 200;
         res.end(msg);
       });
   }
