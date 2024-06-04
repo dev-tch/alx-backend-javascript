@@ -23,10 +23,7 @@ class Department {
   }
 
   static getTotal() {
-    if (this.total === undefined) {
-      this.total = 0;
-    }
-    return this.total;
+    return this.total || 0;
   }
 
   getStudents() {
@@ -37,36 +34,23 @@ class Department {
     return this.nameDep;
   }
 
-  isNameDepEquals(nameDep) {
-    if (this.nameDep === nameDep) {
-      return true;
-    }
-    return false;
-  }
-
-  static iniTotal() {
-    if (this.total === undefined) {
-      this.total = 0;
-    } else {
-      this.total = 0;
-    }
+  static initTotal() {
+    this.total = 0;
   }
 }
 
 function search(nameDep, listDep) {
-  for (const obj of listDep) {
-    if (obj.isNameDepEquals(nameDep)) {
-      return obj;
-    }
+  let objDepartment = listDep.find((dep) => dep.getNameDep() === nameDep);
+  if (!objDepartment) {
+    objDepartment = new Department(nameDep);
+    listDep.push(objDepartment);
   }
-  const obj = new Department(nameDep);
-  listDep.push(obj);
-  return obj;
+  return objDepartment;
 }
 const countStudents = (path) => new Promise((resolve, reject) => {
   const output = [];
   const listDep = [];
-  Department.iniTotal();
+  Department.initTotal();
   fs.readFile(path, 'utf8', (err, data) => {
     if (err) {
       reject(new Error('Cannot load the database'));
@@ -101,7 +85,7 @@ const app = createServer((req, res) => {
     const [, , path = ''] = process.argv;
     countStudents(path)
       .then((output) => {
-        output.splice(0, 0, 'This is the list of our students');
+        output.unshift('This is the list of our students');
         res.end(output.join('\n'));
       })
       .catch(() => {
