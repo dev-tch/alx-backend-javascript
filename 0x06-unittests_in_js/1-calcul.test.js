@@ -13,10 +13,8 @@ describe('calculateNumber', () => {
     assert.strictEqual(calculateNumber('DIVIDE', 1.4 , 4.5), 0.2);
   });
 
-  it('should return 0.2  when inputs are DIVIDE, 1.4 and 0', () => {
-    assert.throws(() => {
-      calculateNumber('DIVIDE', 1.4, 0);
-    }, Error, 'division by zero');
+  it('should return Error  when inputs are DIVIDE, 1.4 and 0', () => {
+      assert.strictEqual(calculateNumber('DIVIDE', 1.4, 0), 'Error');
   });
 
 });

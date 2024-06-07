@@ -6,11 +6,7 @@ function calculateNumber(type='SUM', a, b=0) {
     return (Math.round(a) - Math.round(b))
   }
   if (type === 'DIVIDE') {
-    if (Math.round(b) === 0) {
-      throw new Error('Division by zero');
-    }
-
-    return (Math.round(a) / Math.round(b))
+    return Math.round(b) === 0 ? 'Error' : Math.round(a) / Math.round(b);
   }
 }
 module.exports = calculateNumber;
