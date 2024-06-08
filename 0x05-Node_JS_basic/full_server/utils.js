@@ -1,39 +1,53 @@
 import fs from 'fs';
-import csvParser from 'csv-parser';
 
-export  function readDatabase(filePath) {
+export function readDatabase(filePath) {
   return new Promise((resolve, reject) => {
     const students = {};
-    // test acces file path 
+
+    // Test access file path
     fs.access(filePath, fs.constants.R_OK, (err) => {
       if (err) {
-        console.log("go")
+        reject(new Error('Cannot load the database'));
+        return;
+      }
+
+      // Read file contents
+      fs.readFile(filePath, 'utf-8', (err, data) => {
+        if (err) {
           reject(new Error('Cannot load the database'));
           return;
-      }
-    });
-    fs.createReadStream(filePath)
-    .on('error', () => {
-      reject(new Error('Cannot load the database'));
-      return;
-    })
-
-    .pipe(csvParser())
-    .on('data', (row) => {
-      if (Object.keys(row).length > 0) {
-        const field = row.field;
-        if (!students[field]) {
-            students[field] = [];
         }
-        students[field].push(row.firstname);
-      }
-    })
 
-    .on('end', () => {
-      resolve(students);
-      return;
-    })
+        const lines = data.split('\n');
 
+        // Parse CSV header
+        const header = lines[0].split(',');
+        const fieldIndex = header.indexOf('field');
+        const firstNameIndex = header.indexOf('firstname');
+
+        if (fieldIndex === -1 || firstNameIndex === -1) {
+          reject(new Error('Invalid database format'));
+          return;
+        }
+
+        // Parse each row
+        lines.slice(1).forEach((line) => {
+          const values = line.split(',');
+
+          if (values.length === header.length) {
+            const field = values[fieldIndex];
+            const firstName = values[firstNameIndex];
+
+            if (!students[field]) {
+              students[field] = [];
+            }
+
+            students[field].push(firstName);
+          }
+        });
+
+        resolve(students);
+      });
+    });
   });
-};
-
+}
